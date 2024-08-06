@@ -5,6 +5,7 @@ const pokemonRoutes = require("./routes/restaurant");
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const { cloudinaryConnect } = require("./config/cloudinary");
 const dotenv = require("dotenv");
 
 const PORT = process.env.PORT || 4000;
@@ -20,6 +21,7 @@ app.use(
         credentials: true,
     })
 );
+cloudinaryConnect();
 
 app.use("/api/v1/pokemon", pokemonRoutes);
 

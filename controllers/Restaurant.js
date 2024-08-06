@@ -1,14 +1,16 @@
 const restaurantModel = require("../models/Restaurant");
 require("dotenv").config();
+const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
 exports.createRestaurant = async (req, res) => {
   try {
     const { name, description, location, contactNumber, openingHours } = req.body;
+    const restaurantImage = req.files && req.files.restaurantImageUrl;
 
-    if (!name || !description || !location) {
+    if (!name || !description || !location || !restaurantImage) {
       return res.status(400).json({
         success: false,
-        message: "Name, description, and location are required",
+        message: "Name, description, location and restaurantImage are required",
       });
     }
 
