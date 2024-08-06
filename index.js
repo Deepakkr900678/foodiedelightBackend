@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const pokemonRoutes = require("./routes/restaurant");
+const restaurantRoutes = require("./routes/restaurant");
 
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
@@ -23,7 +23,7 @@ app.use(
 );
 cloudinaryConnect();
 
-app.use("/api/v1/pokemon", pokemonRoutes);
+app.use("/api/v1/restaurant", restaurantRoutes);
 
 app.get("/", (req, res) => {
     return res.json({

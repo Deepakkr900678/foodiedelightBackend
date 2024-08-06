@@ -5,38 +5,48 @@ const { uploadImageToCloudinary } = require("../utils/imageUploader");
 exports.createRestaurant = async (req, res) => {
   try {
     const { name, description, location, contactNumber, openingHours } = req.body;
-    const restaurantImage = req.files && req.files.restaurantImageUrl;
+    const restaurantImage = req.files && req.files.image;
 
-    if (!name || !description || !location || !restaurantImage) {
+    console.log(req.body, "req.body");
+    console.log(req.files, "req.files");
+    console.log(req.files.image, "req.files.image");
+    if (!name || !description || !location) {
       return res.status(400).json({
         success: false,
-        message: "Name, description, location and restaurantImage are required",
+        message: "All Fields are Mandatory",
       });
     }
 
-    const restaurant = new restaurantModel({
+    const uploadedImage = await uploadImageToCloudinary(
+      restaurantImage,
+      process.env.FOLDER_NAME,
+      1000,
+      1000
+    );
+
+    const newRestaurant = await restaurantModel.create({
       name,
       description,
       location,
       contactNumber,
-      openingHours
+      openingHours,
+      image: uploadedImage.secure_url,
     });
 
-    await restaurant.save();
-
-    return res.status(201).json({
+    res.status(201).json({
       success: true,
-      message: "Restaurant created successfully",
-      restaurant,
+      data: newRestaurant,
+      message: "Restaurant Created Successfully",
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
-      message: "Failed to create restaurant. Please try again.",
+      message: "Failed to create restaurant",
+      error: error.message,
     });
   }
-}
+};
 
 exports.getAllRestaurants = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
