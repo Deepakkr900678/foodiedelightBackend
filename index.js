@@ -1,12 +1,12 @@
 const express = require("express");
 const app = express();
 const restaurantRoutes = require("./routes/restaurant");
-
 const database = require("./config/database");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { cloudinaryConnect } = require("./config/cloudinary");
 const dotenv = require("dotenv");
+const fileUpload = require("express-fileupload");
 
 const PORT = process.env.PORT || 4000;
 
@@ -19,6 +19,12 @@ app.use(
     cors({
         origin: "*",
         credentials: true,
+    })
+);
+app.use(
+    fileUpload({
+        useTempFiles: true,
+        tempFileDir: "/tmp/",
     })
 );
 cloudinaryConnect();
