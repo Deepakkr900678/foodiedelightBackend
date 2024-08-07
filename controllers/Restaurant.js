@@ -1,15 +1,9 @@
 const restaurantModel = require("../models/Restaurant");
-require("dotenv").config();
-const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
 exports.createRestaurant = async (req, res) => {
   try {
     const { name, description, location, contactNumber, openingHours } = req.body;
-    const restaurantImage = req.files && req.files.image;
 
-    console.log(req.body, "req.body");
-    console.log(req.files, "req.files");
-    console.log(req.files.image, "req.files.image");
     if (!name || !description || !location) {
       return res.status(400).json({
         success: false,
@@ -17,20 +11,12 @@ exports.createRestaurant = async (req, res) => {
       });
     }
 
-    const uploadedImage = await uploadImageToCloudinary(
-      restaurantImage,
-      process.env.FOLDER_NAME,
-      1000,
-      1000
-    );
-
     const newRestaurant = await restaurantModel.create({
       name,
       description,
       location,
       contactNumber,
       openingHours,
-      image: uploadedImage.secure_url,
     });
 
     res.status(201).json({
